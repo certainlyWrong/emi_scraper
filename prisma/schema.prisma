@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Manga {
+  id          Int          @id @default(autoincrement())
+  title       String
+  manga_url   String?
+  image_url   String?
+  description String?
+  author      String?
+  status      String?
+  raiting     String?
+  MangaGenre  MangaGenre[]
+  Chapter     Chapter[]
+
+  @@unique([title])
+  @@map("manga")
+}
+
+model Genre {
+  id         Int          @id @default(autoincrement())
+  name       String?      @unique
+  MangaGenre MangaGenre[]
+
+  @@map("genre")
+}
+
+model MangaGenre {
+  id      Int    @id @default(autoincrement())
+  mangaId Int?
+  genreId Int?
+  manga   Manga? @relation(fields: [mangaId], references: [id])
+  genre   Genre? @relation(fields: [genreId], references: [id])
+
+  @@map("manga_genre")
+}
+
+model Chapter {
+  id      Int     @id @default(autoincrement())
+  title   String?
+  mangaId Int?
+  manga   Manga?  @relation(fields: [mangaId], references: [id])
+  pages   Page[]
+
+  @@map("chapter")
+}
+
+model Page {
+  id        Int      @id @default(autoincrement())
+  chapterId Int?
+  chapter   Chapter? @relation(fields: [chapterId], references: [id])
+  url       String?
+
+  @@map("page")
+}

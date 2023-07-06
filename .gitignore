@@ -1,2 +1,8 @@
 node_modules
 build
+package-lock.json
+db
+migrations
+.env
+yarn.lock
+package-lock.json
